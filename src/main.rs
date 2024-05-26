@@ -1,4 +1,4 @@
-use std::{panic, path::PathBuf};
+use std::{panic, path::PathBuf, str::FromStr};
 
 use clap::Parser;
 
@@ -46,15 +46,39 @@ fn main() {
         },
     };
 
-    // name
-
     let working_dir = match args.folder_name {
-        Some(name) => PathBuf::new(),
+        Some(name) => {
+            let result = PathBuf::from_str(name.as_str());
+
+            let full_url = match result {
+                Ok(path) => {
+                    let current_dir = match std::env::current_dir() {
+                        Ok(dir) => dir,
+                        Err(err) => {
+                            println!("{:#?}", err);
+                            panic!("working directory error constructing full path")
+                        }
+                    };
+
+                    let destination = format!("{:#?}/{:#?}", current_dir, path);
+                    destination
+                }
+                Err(err) => {
+                    println!("{:#}", err);
+                    panic!("Couldn't work with current directory");
+                }
+            };
+
+            full_url
+        }
         None => {
             let result = std::env::current_dir();
 
             match result {
-                Ok(path) => path,
+                Ok(path) => {
+                    let full_url = format!("{:#?}", path);
+                    full_url
+                }
                 Err(err) => {
                     println!("{:#}", err);
                     panic!("Couldn't work with current directory");
@@ -67,13 +91,13 @@ fn main() {
 
     match args.template {
         Template::ElectronReactTs => {
-            println!("ElectronReactTs");
+            println!("ElectronReactTs: {:#?}", working_dir);
         }
         Template::ElectronSolidTs => {
             println!("{:#?}", working_dir);
         }
         Template::ReactNativeTs => {
-            println!("ReactNativeTs");
+            println!("ReactNativeTs: {:#?}", working_dir);
         }
     }
 }
