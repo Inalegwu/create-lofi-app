@@ -31,6 +31,14 @@ impl Decoder {
     fn react_ts(&self) {
         println!("{:#?}", &self.working_dir.as_path());
 
+        if self.working_dir.as_path().exists() {
+            let _ = self.copy_dir_all(
+                "../templates/electron-react-ts/",
+                self.working_dir.as_path(),
+            );
+            return;
+        }
+
         match fs::create_dir(self.working_dir.as_path()) {
             Ok(_) => {
                 let _ = self.copy_dir_all(
@@ -48,10 +56,49 @@ impl Decoder {
 
     fn solid_ts(&self) {
         println!("{:#?}", &self.working_dir);
+
+        if self.working_dir.as_path().exists() {
+            let _ = self.copy_dir_all(
+                "../templates/electron-solid-ts/",
+                self.working_dir.as_path(),
+            );
+            return;
+        }
+
+        match fs::create_dir(self.working_dir.as_path()) {
+            Ok(_) => {
+                let _ = self.copy_dir_all(
+                    "../templates/electron-solid-ts/",
+                    self.working_dir.as_path(),
+                );
+
+                println!("Success,finally");
+            }
+            Err(err) => {
+                panic!("{:#?}", err)
+            }
+        }
     }
 
     fn native_ts(&self) {
-        println!("{:#?}", &self.working_dir);
+        println!("{:#?}", &self.working_dir.as_path());
+
+        if self.working_dir.as_path().exists() {
+            let _ = self.copy_dir_all("../templates/react-native-ts/", self.working_dir.as_path());
+            return;
+        }
+
+        match fs::create_dir(self.working_dir.as_path()) {
+            Ok(_) => {
+                let _ =
+                    self.copy_dir_all("../templates/react-native-ts/", self.working_dir.as_path());
+
+                println!("Success,finally");
+            }
+            Err(err) => {
+                panic!("{:#?}", err)
+            }
+        }
     }
 
     fn copy_dir_all(&self, src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
