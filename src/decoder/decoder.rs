@@ -32,12 +32,15 @@ impl Decoder {
         println!("{:#?}", &self.working_dir.as_path());
 
         if self.working_dir.as_path().exists() {
+            println!("💡 Directory already exists, Copying template files");
             let _ = self.copy_dir_all(
                 "../templates/electron-react-ts/",
                 self.working_dir.as_path(),
             );
             return;
         }
+
+        println!("💡 Creating Destination Directory");
 
         match fs::create_dir(self.working_dir.as_path()) {
             Ok(_) => {
@@ -58,12 +61,15 @@ impl Decoder {
         println!("{:#?}", &self.working_dir);
 
         if self.working_dir.as_path().exists() {
+            println!("💡 Directory already exists, Copying template files");
             let _ = self.copy_dir_all(
                 "../templates/electron-solid-ts/",
                 self.working_dir.as_path(),
             );
             return;
         }
+
+        println!("💡 Creating Destination Directory");
 
         match fs::create_dir(self.working_dir.as_path()) {
             Ok(_) => {
@@ -84,9 +90,12 @@ impl Decoder {
         println!("{:#?}", &self.working_dir.as_path());
 
         if self.working_dir.as_path().exists() {
+            println!("💡 Directory already exists, Copying template files");
             let _ = self.copy_dir_all("../templates/react-native-ts/", self.working_dir.as_path());
             return;
         }
+
+        println!("💡 Creating Destination Directory");
 
         match fs::create_dir(self.working_dir.as_path()) {
             Ok(_) => {
@@ -115,6 +124,8 @@ impl Decoder {
                 let _ = fs::copy(entry.path(), dst.as_ref().join(entry.file_name()))?;
             }
         }
+
+        println!("✔️ Copying Template file complete");
 
         Ok(())
     }
